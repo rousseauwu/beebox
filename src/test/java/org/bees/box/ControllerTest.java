@@ -22,7 +22,7 @@ public class ControllerTest {
     private LoginController loginController;
 
     @Test
-    public void validTest(){
+    public void validTest() throws InterruptedException {
         Student student = new Student();
         Student login = loginController.login(student);
         logger.info(JSONObject.toJSONString(login));
