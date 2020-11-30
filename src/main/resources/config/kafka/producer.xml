@@ -4,17 +4,17 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
 
-    <bean id="kafkaProducer" class="org.apache.kafka.clients.producer.KafkaProducer">
-        <constructor-arg type="java.util.Properties">
-            <props>
-                <prop key="bootstrap.servers">${spring.kafka.bootstrap-servers}</prop>
-                <prop key="batch.size">${spring.kafka.producer.batch-size}</prop>
-                <prop key="key.serializer">${spring.kafka.producer.key-serializer}</prop>
-                <prop key="value.serializer">${spring.kafka.producer.value-serializer}</prop>
-                <prop key="acks">all</prop>
-                <prop key="retries">0</prop>
-            </props>
-        </constructor-arg>
-    </bean>
+<!--    <bean id="kafkaProducer" class="org.apache.kafka.clients.producer.KafkaProducer">-->
+<!--        <constructor-arg type="java.util.Properties">-->
+<!--            <props>-->
+<!--                <prop key="bootstrap.servers">${spring.kafka.bootstrap-servers}</prop>-->
+<!--&lt;!&ndash;                <prop key="batch.size">${spring.kafka.producer.batch-size}</prop>&ndash;&gt;-->
+<!--                <prop key="key.serializer">${spring.kafka.producer.key-serializer}</prop>-->
+<!--                <prop key="value.serializer">${spring.kafka.producer.value-serializer}</prop>-->
+<!--                <prop key="acks">all</prop>-->
+<!--                <prop key="retries">0</prop>-->
+<!--            </props>-->
+<!--        </constructor-arg>-->
+<!--    </bean>-->
 
 </beans>
