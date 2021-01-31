@@ -1,12 +1,9 @@
 package org.bees.box;
 
 import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bees.box.entity.Student;
-import org.bees.box.util.BeeEsClient;
 import org.elasticsearch.action.index.IndexResponse;
-import org.elasticsearch.client.AdminClient;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.TransportAddress;
@@ -18,9 +15,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -44,9 +39,9 @@ public class EsTest {
     public void createClient() {
         try {
             Settings settings = Settings.builder()
-                    .put("cluster.name", "elasticsearch").build();
+                    .put("cluster.name", "docker-cluster").build();
             client = new PreBuiltTransportClient(settings);
-            client.addTransportAddress(new TransportAddress(InetAddress.getByName("127.0.0.1"),9300));
+            client.addTransportAddress(new TransportAddress(InetAddress.getByName("127.0.0.1"), 9300));
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }

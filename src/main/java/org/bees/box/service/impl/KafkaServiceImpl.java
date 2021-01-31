@@ -15,11 +15,11 @@ public class KafkaServiceImpl implements KafkaService {
     private static Logger logger = LoggerFactory.getLogger(KafkaService.class);
 
     @Autowired
-    private KafkaTemplate<String, String> template;
+    private KafkaTemplate<String, Object> template;
 
     @Override
     public void send(String topic, String value) {
-        ListenableFuture<SendResult<String, String>> listenableFuture = template.send(topic, value);
+        ListenableFuture<SendResult<String, Object>> listenableFuture = template.send(topic, value);
         listenableFuture.addCallback(successCallBack -> logger.info("send success"), failureCallBack -> logger.info("send failed"));
     }
 }

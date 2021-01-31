@@ -4,6 +4,8 @@ import java.util.concurrent.*;
 
 public class BeeThreadPool {
 
+    private static final int CORE_CPU = Runtime.getRuntime().availableProcessors();
+
 
     public static void main(String[] args) {
         final BeeThreadPool threadPoolTest = new BeeThreadPool();
