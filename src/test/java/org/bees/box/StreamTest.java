@@ -29,7 +29,7 @@ public class StreamTest {
         System.out.println(count1);
 
 
-        int[] intArray = {1, 2, 3, 4 ,6, 6};
+        int[] intArray = {1, 2, 3, 4, 6, 6};
 
         //1. Stream<int[]>
         Stream<int[]> streamArray = Stream.of(intArray);
