@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
@@ -20,10 +21,51 @@
         <validation-api>2.0.1.Final</validation-api>
         <hibernate-validator>6.0.2.Final</hibernate-validator>
         <jackjson-version>2.9.6</jackjson-version>
-        <fastjson-version>1.2.73</fastjson-version>
+        <fastjson-version>1.2.75</fastjson-version>
+
+
+        <maven-plugins.version>3.1.1</maven-plugins.version>
+        <maven-jar.version>3.1.0</maven-jar.version>
+        <maven-compiler.version>3.7.0</maven-compiler.version>
+        <maven-resource.version>3.0.1</maven-resource.version>
+        <maven-source.version>3.0.1</maven-source.version>
+        <maven-dependency.version>3.1.1</maven-dependency.version>
     </properties>
 
     <dependencies>
+        <!--        mybatis-->
+        <dependency>
+            <groupId>com.battcn.boot</groupId>
+            <artifactId>extend-mybatis-spring-boot-starter</artifactId>
+            <version>2.1.2-RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!--        dubbo -->
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo</artifactId>
+            <version>2.7.5</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+
+        <!--        red lock 分布式锁-->
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson</artifactId>
+            <version>3.3.2</version>
+        </dependency>
         <!--redis-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -139,13 +181,149 @@
     </dependencies>
 
     <build>
-        <finalName>bee</finalName>
+        <sourceDirectory>src/main/java</sourceDirectory>
+        <finalName>kafksender</finalName>
+        <defaultGoal>package</defaultGoal>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>*.properties</include>
+                    <include>META-INF/**</include>
+                    <include>config/**</include>
+                </includes>
+                <filtering>true</filtering>
+            </resource>
+            <!-- 把lib目录下所有的文件拷贝到lib目录中
+           （可能有些jar包没有办法在maven中找到，需要放在lib目录中） -->
+            <resource>
+                <directory>lib</directory>
+                <targetPath>${project.build.directory}/lib</targetPath>
+            </resource>
+            <!-- 把放在根目录下的脚本文件.sh,.bat拷贝到bin目录中 -->
+            <resource>
+                <directory>.</directory>
+                <includes>
+                    <include>**/*.sh</include>
+                    <include>**/*.bat</include>
+                </includes>
+                <targetPath>${project.build.directory}/bin</targetPath>
+            </resource>
+        </resources>
+
         <plugins>
+            <!-- 用于编译的plugin -->
             <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler.version}</version>
+                <configuration>
+                    <fork>true</fork>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <!-- don't append suffix jar-with-dependencies to jar file-->
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive>
+                        <manifest>
+                            <!-- 此处指定main方法入口的class -->
+                            <mainClass>org.bees.box.BoxApplication</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly
+                        </id> <!-- this is used for inheritance merges -->
+                        <phase>package
+                        </phase> <!-- bind to the packaging phase -->
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- 用于生成jar包的plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${maven-jar.version}</version>
+                <configuration>
+                    <!-- 把生成的jar包放在lib目录下（和其他所有jar包一起） -->
+                    <outputDirectory>${project.build.directory}/
+                    </outputDirectory>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>kafksender</mainClass>
+                        </manifest>
+                    </archive>
+                    <excludes>
+                        <!-- 排除掉一些文件,不要放到jar包中， 这里是为了排除掉src/main/resources中的文件（它们应该放到conf目录） 这里只能指定要排除的目标文件，而不能指定源文件，虽然不够完美，但是基本能达到目的。 -->
+                        <exclude>*.xml</exclude>
+                        <exclude>*.properties</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <!-- 用于拷贝maven依赖的plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>${maven-dependency.version}</version>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <!-- 把依赖的所有maven jar包拷贝到lib目录中（这样所有的jar包都在lib目录中） -->
+                            <outputDirectory>${project.build.directory}/lib
+                            </outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- 用于拷贝resource的plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>${maven-resource.version}</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <!-- 配置生成源代码jar的plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>${maven-source.version}</version>
+                <configuration>
+                    <!-- 配置源代码jar文件的存放路径，和其他jar文件一起放在lib目录 -->
+                    <outputDirectory>${project.build.directory}/
+                    </outputDirectory>
+                    <attach>true</attach>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
-
 </project>

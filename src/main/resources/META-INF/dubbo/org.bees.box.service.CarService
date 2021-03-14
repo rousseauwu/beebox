@@ -1,0 +1,2 @@
+lambo = org.bees.box.service.impl.CarServiceImpl
+org.bees.box.service.impl.CarServiceWrapper

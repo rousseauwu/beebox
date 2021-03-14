@@ -19,21 +19,21 @@ public class Algra {
                 break;
             }
 
-            if (a.get(aIndex)<=b.get(bIndex)){
+            if (a.get(aIndex) <= b.get(bIndex)) {
                 hebing.add(a.get(aIndex));
                 aIndex++;
-                if (aIndex == a.size()){
-                    hebing.addAll(b.subList(bIndex,b.size()));
+                if (aIndex == a.size()) {
+                    hebing.addAll(b.subList(bIndex, b.size()));
                     break;
                 }
                 continue;
             }
 
-            if (a.get(aIndex)>b.get(bIndex)){
+            if (a.get(aIndex) > b.get(bIndex)) {
                 hebing.add(b.get(bIndex));
                 bIndex++;
-                if (bIndex == b.size()){
-                    hebing.addAll(a.subList(aIndex,a.size()));
+                if (bIndex == b.size()) {
+                    hebing.addAll(a.subList(aIndex, a.size()));
                     break;
                 }
                 continue;
@@ -44,5 +44,8 @@ public class Algra {
 
 
         System.out.println(hebing.toString());
+
+
     }
+
 }

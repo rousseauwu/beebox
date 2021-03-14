@@ -1,11 +1,5 @@
 package org.bees.box;
 
-import com.alibaba.fastjson.JSONObject;
-import org.bees.box.entity.Student;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -24,19 +18,30 @@ public class RandomTest {
 
 
     public static void main(String[] args) {
+        int COUNT_BITS = Integer.SIZE - 3;
+        int RUNNING = -1 << COUNT_BITS;
+        int SHUTDOWN = 0 << COUNT_BITS;
+        int STOP = 1 << COUNT_BITS;
+        int TIDYING = 2 << COUNT_BITS;
+        int TERMINATED = 3 << COUNT_BITS;
+        int CAPACITY = (1 << COUNT_BITS) - 1;
+        System.out.println(COUNT_BITS);
+        System.out.println(CAPACITY);
+        System.out.println(RUNNING);
+        System.out.println(SHUTDOWN);
+        System.out.println(STOP);
+        System.out.println(TIDYING);
+        System.out.println(TERMINATED);
 
-        Field[] declaredField = RandomTest.class.getDeclaredFields();
-        System.out.println(JSONObject.toJSONString(declaredField));
+        System.out.println(RUNNING | 0);
 
-        for (Field f : declaredField){
-            //打印是否是ParameterizedType类型
-            System.out.println("FieldName:  " + f.getName() + " instanceof ParameterizedType is : " +
-                    (f.getGenericType() instanceof ParameterizedType));
-        }
+        System.out.println(~0);
+    }
 
-        List<Student> studentList = new ArrayList<>();
+    interface Hello {
+        void moring(String name);
 
-        System.out.println("1");
+        void hi(String name);
     }
 
 }
