@@ -58,8 +58,10 @@ public class ConsistencyHashUtil {
      */
     public String getShardInfo(String key) {
         long hashCode = hash(key);
+//        返回treemap中完全大于指定key的所有kv
         SortedMap<Long, String> tailMap = virtualHash2RealNode.tailMap(hashCode);
         if (tailMap.isEmpty()) {
+//            如果没有kv，则取环中第一个节点
             return virtualHash2RealNode.get(virtualHash2RealNode.firstKey());
         }
         return virtualHash2RealNode.get(tailMap.firstKey());

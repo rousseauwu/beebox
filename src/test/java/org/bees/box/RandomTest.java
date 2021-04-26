@@ -3,6 +3,7 @@ package org.bees.box;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 public class RandomTest {
@@ -17,31 +18,58 @@ public class RandomTest {
     private String str;
 
 
-    public static void main(String[] args) {
-        int COUNT_BITS = Integer.SIZE - 3;
-        int RUNNING = -1 << COUNT_BITS;
-        int SHUTDOWN = 0 << COUNT_BITS;
-        int STOP = 1 << COUNT_BITS;
-        int TIDYING = 2 << COUNT_BITS;
-        int TERMINATED = 3 << COUNT_BITS;
-        int CAPACITY = (1 << COUNT_BITS) - 1;
-        System.out.println(COUNT_BITS);
-        System.out.println(CAPACITY);
-        System.out.println(RUNNING);
-        System.out.println(SHUTDOWN);
-        System.out.println(STOP);
-        System.out.println(TIDYING);
-        System.out.println(TERMINATED);
+    public static void main(String[] args) throws InterruptedException {
+        array = new int[]{5, 9, 1, 9, 5, 3, 7, 6, 1};
+        sort();
+        print();
+        StringBuilder stringBuilder = new StringBuilder();
+        StringBuffer stringBuffer = new StringBuffer();
+        HashMap<Object, Object> objectObjectHashMap = new HashMap<>();
 
-        System.out.println(RUNNING | 0);
-
-        System.out.println(~0);
+        new RandomTest().hashCode();
     }
 
-    interface Hello {
-        void moring(String name);
+    private static int[] array;
 
-        void hi(String name);
+    public static void sort() {
+        quickSort(array, 0, array.length - 1);
+    }
+    public static void print() {
+        for (int i = 0; i < array.length; i++) {
+            System.out.println(array[i]);
+        }
     }
 
+    /**
+     * 递归排序
+     * @param src
+     * @param begin
+     * @param end
+     */
+    private static void quickSort(int[] src, int begin, int end) {
+        if (begin < end) {
+            int key = src[begin];
+            int i = begin;
+            int j = end;
+            while (i < j) {
+                while (i < j && src[j] > key) {
+                    j--;
+                }
+                if (i < j) {
+                    src[i] = src[j];
+                    i++;
+                }
+                while (i < j && src[i] < key) {
+                    i++;
+                }
+                if (i < j) {
+                    src[j] = src[i];
+                    j--;
+                }
+            }
+            src[i] = key;
+            quickSort(src, begin, i - 1);
+            quickSort(src, i + 1, end);
+        }
+    }
 }

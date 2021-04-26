@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.redisson.Redisson;
 import org.redisson.api.RLock;
+import org.redisson.api.RReadWriteLock;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -24,6 +25,7 @@ public class RedlockTest {
         RedissonClient redissonClient = Redisson.create(config);
 // 还可以getFairLock(), getReadWriteLock()
         RLock redLock = redissonClient.getLock("REDLOCK_KEY");
+
         boolean isLock;
         try {
 //            isLock = redLock.tryLock();
@@ -37,5 +39,9 @@ public class RedlockTest {
             // 无论如何, 最后都要解锁
             redLock.unlock();
         }
+
+        RReadWriteLock readWriteLock = redissonClient.getReadWriteLock("1");
+        RLock rLock = readWriteLock.writeLock();
+        rLock.lock();
     }
 }
