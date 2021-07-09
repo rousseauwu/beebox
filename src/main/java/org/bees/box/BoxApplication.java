@@ -10,6 +10,7 @@ public class BoxApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(BoxApplication.class, args);
+		System.out.println("hello world?");
 	}
 
 }
